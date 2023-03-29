@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://ck3fr1w5oc8sl"]
+
+[ext_resource type="PackedScene" uid="uid://ddvl7k8cfb308" path="res://Scenes/Snake/snake.tscn" id="1_l6k5n"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_oebbh"]
+
+[node name="Game" type="Node2D"]
+material = SubResource("CanvasItemMaterial_oebbh")
+
+[node name="Snake" parent="." instance=ExtResource("1_l6k5n")]
