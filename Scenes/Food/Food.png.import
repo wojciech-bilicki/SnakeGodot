@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfl5h65fd0e0h"
-path="res://.godot/imported/Food.png-3e109b5688da038dc056c4d3016d0346.ctex"
+path="res://.godot/imported/Food.png-05cc344acb41b5e98c6e25f10f50ae66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Food.png"
-dest_files=["res://.godot/imported/Food.png-3e109b5688da038dc056c4d3016d0346.ctex"]
+source_file="res://Scenes/Food/Food.png"
+dest_files=["res://.godot/imported/Food.png-05cc344acb41b5e98c6e25f10f50ae66.ctex"]
 
 [params]
 

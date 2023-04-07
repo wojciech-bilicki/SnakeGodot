@@ -8,7 +8,10 @@ var move_direction = Vector2.ZERO
 var body_texture = preload("res://Scenes/Snake/Snake.png")
 @onready var snake_parts: Node = $SnakeParts
 @onready var timer = $Timer
-var walls_dict = {}
+@export var walls: Walls
+var walls_dict
+var food_spawner: FoodSpawner
+
 
 enum CollisionDirection {
 	TOP,
@@ -25,19 +28,9 @@ func _ready():
 	snake_parts.add_child(head)
 	body_fragments.append(head)
 	timer.timeout.connect(on_timeout)
+	walls_dict = walls.walls_dict
+	food_spawner = get_tree().get_first_node_in_group("food_spawner") as FoodSpawner
 	
-	var walls = get_tree().get_nodes_in_group("walls")
-	#initiate walls
-	for wall in walls:
-		var wall_node = wall as Node2D
-		if wall_node.position.x < 0:
-			walls_dict["left"] = wall_node
-		elif wall_node.position.x > 0:
-			walls_dict["right"] = wall_node
-		elif wall_node.position.y < 0:
-			walls_dict["top"] = wall_node
-		elif wall_node.position.y > 0:
-			walls_dict["bottom"] = wall_node
 
 func _input(event):
 	# Handle user input to change the move direction
@@ -52,16 +45,26 @@ func _input(event):
 		
 		
 func on_timeout():
-	var new_head_position = body_fragments[0].position + move_direction * BODY_SEGMENT_SIZE
+	var previous_head_position = body_fragments[0].position
+	var new_head_position = previous_head_position + move_direction * BODY_SEGMENT_SIZE
 	
 	var wall_collision = check_wall_collision(new_head_position)
-	print(wall_collision)
 	if wall_collision == null:
 		move_to_position(new_head_position)
 	else:
 		var position_collision = get_position_after_collision(wall_collision, new_head_position)
-		
 		move_to_position(position_collision)
+			
+	#check for snake colliding with itself
+	var snake_collision = check_snake_collision()
+	if(snake_collision):
+		print("GAME OVER") 
+	
+	#food collision
+	if new_head_position == food_spawner.food_position:
+		food_spawner.destroy_food()
+		food_spawner.spawn_food()
+		add_body_segment()
 	
 	
 func get_position_after_collision(wall_collision, head_position):
@@ -77,6 +80,7 @@ func get_position_after_collision(wall_collision, head_position):
 	return body_fragments[0].position + move_direction * BODY_SEGMENT_SIZE
 	
 func check_wall_collision(head_position):
+	
 	if head_position.x == walls_dict["left"].position.x && move_direction == Vector2.LEFT:
 		return CollisionDirection.LEFT
 	if head_position.x == walls_dict["right"].position.x && move_direction == Vector2.RIGHT:
@@ -87,5 +91,21 @@ func check_wall_collision(head_position):
 		return CollisionDirection.BOTTOM
 	
 func move_to_position(new_position):
+
+	var last_element = body_fragments.pop_back()
+	body_fragments.insert(0, last_element)
+		
 	body_fragments[0].position = new_position
 	position = new_position
+	
+func add_body_segment():
+	var new_segment = Sprite2D.new()
+	new_segment.texture = body_texture
+	snake_parts.add_child(new_segment)
+	new_segment.position = body_fragments[-1].position - move_direction * BODY_SEGMENT_SIZE
+	body_fragments.append(new_segment)
+
+func check_snake_collision():
+	if(body_fragments.filter(func (fragment): return fragment.position == position )):
+		return true
+	return false
