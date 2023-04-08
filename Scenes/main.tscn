@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://ck3fr1w5oc8sl"]
+[gd_scene load_steps=8 format=3 uid="uid://ck3fr1w5oc8sl"]
 
 [ext_resource type="PackedScene" uid="uid://ddvl7k8cfb308" path="res://Scenes/Snake/snake.tscn" id="1_l6k5n"]
+[ext_resource type="PackedScene" uid="uid://d3l6gt5ixq5w" path="res://Scenes/UI/ui_layer.tscn" id="1_mixja"]
 [ext_resource type="Script" path="res://Scenes/Walls.gd" id="1_puske"]
 [ext_resource type="Texture2D" uid="uid://d0g3r3f6r0qgq" path="res://top-bottom-wall.png" id="2_ghkau"]
 [ext_resource type="Script" path="res://Scenes/FoodSpawner.gd" id="3_ssa5v"]
@@ -10,6 +11,9 @@
 
 [node name="Game" type="Node2D"]
 material = SubResource("CanvasItemMaterial_oebbh")
+
+[node name="UILayer" parent="." node_paths=PackedStringArray("snake") instance=ExtResource("1_mixja")]
+snake = NodePath("../Snake")
 
 [node name="Walls" type="Node" parent="."]
 script = ExtResource("1_puske")
@@ -38,7 +42,7 @@ texture = ExtResource("2_ghkau")
 walls = NodePath("../Walls")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.6, 0.6)
+zoom = Vector2(0.5, 0.5)
 
 [node name="FoodSpawner" type="Node" parent="." node_paths=PackedStringArray("walls") groups=["food_spawner"]]
 script = ExtResource("3_ssa5v")

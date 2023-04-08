@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3l6gt5ixq5w"]
+
+[ext_resource type="Script" path="res://Scenes/UI/ui_layer.gd" id="1_ld03l"]
+
+[node name="UILayer" type="CanvasLayer"]
+script = ExtResource("1_ld03l")
+
+[node name="ButonContainer" type="HBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(400, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 12.0
+offset_right = 200.0
+offset_bottom = 43.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="Restart" type="Button" parent="ButonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Restart"
+
+[node name="Quit" type="Button" parent="ButonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Quit
+"
+
+[node name="GameOverLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -368.0
+offset_top = -89.0
+offset_right = -185.0
+offset_bottom = -41.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4.10908, 3.91966)
+size_flags_horizontal = 6
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "GAME OVER"
+metadata/_edit_use_anchors_ = true
+
+[node name="PointsLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -97.0
+offset_top = 16.0
+offset_right = -30.0
+offset_bottom = 42.0
+grow_horizontal = 0
+text = "Points: 0"

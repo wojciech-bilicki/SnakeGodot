@@ -1,7 +1,14 @@
 extends Node2D
 
+class_name Snake
+
 const BODY_SEGMENT_SIZE = 32
 
+signal on_game_over
+signal on_point_scored
+
+
+var points = 0
 var body_fragments = []
 var move_direction = Vector2.ZERO
 
@@ -11,7 +18,6 @@ var body_texture = preload("res://Scenes/Snake/Snake.png")
 @export var walls: Walls
 var walls_dict
 var food_spawner: FoodSpawner
-
 
 enum CollisionDirection {
 	TOP,
@@ -58,13 +64,16 @@ func on_timeout():
 	#check for snake colliding with itself
 	var snake_collision = check_snake_collision()
 	if(snake_collision):
-		print("GAME OVER") 
+		timer.stop()
+		on_game_over.emit()
 	
 	#food collision
 	if new_head_position == food_spawner.food_position:
 		food_spawner.destroy_food()
 		food_spawner.spawn_food()
 		add_body_segment()
+		points += 1
+		on_point_scored.emit(points)
 	
 	
 func get_position_after_collision(wall_collision, head_position):
@@ -92,8 +101,10 @@ func check_wall_collision(head_position):
 	
 func move_to_position(new_position):
 
-	var last_element = body_fragments.pop_back()
-	body_fragments.insert(0, last_element)
+	if body_fragments.size() > 1:
+		var last_element = body_fragments.pop_back()
+		last_element.position = body_fragments[0].position
+		body_fragments.insert(1, last_element)
 		
 	body_fragments[0].position = new_position
 	position = new_position
@@ -101,11 +112,13 @@ func move_to_position(new_position):
 func add_body_segment():
 	var new_segment = Sprite2D.new()
 	new_segment.texture = body_texture
+	new_segment.scale = Vector2(0.9, 0.9)
 	snake_parts.add_child(new_segment)
 	new_segment.position = body_fragments[-1].position - move_direction * BODY_SEGMENT_SIZE
 	body_fragments.append(new_segment)
 
 func check_snake_collision():
-	if(body_fragments.filter(func (fragment): return fragment.position == position )):
+	var body_fragments_without_head = body_fragments.slice(1, body_fragments.size())
+	if(body_fragments_without_head.filter(func (fragment): return fragment.position == position )):
 		return true
 	return false
