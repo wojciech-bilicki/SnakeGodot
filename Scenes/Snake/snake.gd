@@ -31,12 +31,13 @@ func _ready():
 	head.position = Vector2(0,0)
 	head.scale = Vector2(1,1)
 	head.texture = body_texture
+	head.modulate = Color(0,0.95, 0)
 	snake_parts.add_child(head)
 	body_fragments.append(head)
 	timer.timeout.connect(on_timeout)
 	walls_dict = walls.walls_dict
 	food_spawner = get_tree().get_first_node_in_group("food_spawner") as FoodSpawner
-	
+	food_spawner.spawn_food(body_fragments)
 
 func _input(event):
 	# Handle user input to change the move direction
@@ -69,8 +70,11 @@ func on_timeout():
 	
 	#food collision
 	if new_head_position == food_spawner.food_position:
+		timer.wait_time = timer.wait_time * 0.95
+		timer.stop()
+		timer.start()
 		food_spawner.destroy_food()
-		food_spawner.spawn_food()
+		food_spawner.spawn_food(body_fragments)
 		add_body_segment()
 		points += 1
 		on_point_scored.emit(points)
